@@ -55,7 +55,27 @@ server.get('/api/users/:id', (req, res) => {
     })
     .catch(err => {
         res.status(500).json({
-            message: "The user information could not be retrieved"
+            message: "The user information could not be retrieved",
+            custom: err.message
+        })
+    })
+})
+
+// [DELETE] /api/users/:id (deletes user with :id)
+server.delete('/api/users/:id', (req, res) => {
+    const { id } = req.params;
+    User.remove(id)
+    .then(user => {
+        if (!user) {
+            res.status(404).json({ message: "The user with the specified ID does not exist" })
+        } else {
+            res.status(200).json(user)
+        }
+    })
+    .catch(err => {
+        res.status(500).json({
+            message: "The user could not be removed",
+            custom: err.message
         })
     })
 })
